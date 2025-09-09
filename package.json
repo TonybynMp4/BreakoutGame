@@ -1,0 +1,16 @@
+{
+	"name": "epic-pokemon-battle",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"watch": "tsc -w",
+		"start": "npm run build && npx serve -l 3000 ."
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"typescript": "^5.5.4",
+		"serve": "^14.2.1"
+	}
+}
