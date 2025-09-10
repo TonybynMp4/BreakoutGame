@@ -1,16 +1,15 @@
 {
-	"name": "epic-pokemon-battle",
-	"version": "0.1.0",
+	"name": "pokefight",
 	"private": true,
+	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"build": "tsc",
-		"watch": "tsc -w",
-		"start": "npm run build && npx serve -l 3000 ."
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview"
 	},
-	"dependencies": {},
 	"devDependencies": {
-		"typescript": "^5.5.4",
-		"serve": "^14.2.1"
+		"typescript": "~5.8.3",
+		"vite": "^7.1.2"
 	}
 }
