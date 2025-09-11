@@ -57,6 +57,12 @@ export class DomRenderer {
 		this.playArea.style.width = config.width + 'px';
 		this.playArea.style.height = config.height + 'px';
 		this.root.appendChild(this.playArea);
+		const subtext = document.createElement('p');
+		subtext.style.fontSize = '12px';
+		subtext.style.textAlign = 'center';
+		subtext.style.marginTop = '4px';
+		subtext.textContent = 'Barre espace pour démarrer!';
+		this.root.appendChild(subtext);
 
 		this.paddleEl = document.createElement('div');
 		this.paddleEl.className = 'paddle';
