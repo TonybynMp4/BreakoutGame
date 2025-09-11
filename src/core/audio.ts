@@ -42,7 +42,7 @@ export class AudioManager {
 		await Promise.all(entries.map(([name, url]) => this.load(name, url)));
 	}
 
-	play(name: string, opts?: { volume?: number; }) {
+	play(name: string, opts?: { volume?: number; loop?: boolean }) {
 		if (!this.enabled) return;
 		const audioElement = this.sounds[name];
 		if (!audioElement) return console.warn(`AudioManager: sound '${name}' not found/loaded`);
@@ -51,6 +51,7 @@ export class AudioManager {
 			const soundNode = audioElement.cloneNode(true) as HTMLAudioElement;
 			const v = opts?.volume ?? 1 * this.volume;
 			soundNode.volume = clamp(v, 0, 1);
+			soundNode.loop = opts?.loop ?? false;
 			soundNode.play();
 		} catch (e) {
 			console.error(`Error playing sound '${name}':`, e);

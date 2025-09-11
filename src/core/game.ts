@@ -24,8 +24,26 @@ export class Game {
 			['pop', '/fx/pop.mp3'],
 			['win', '/fx/win.wav'],
 			['lose', '/fx/lose.wav'],
-			['cheer', '/fx/cheer.wav']
-		]).catch(err => console.error('Audio load error:', err));
+			['cheer', '/fx/cheer.wav'],
+			['bg_music', '/fx/bg_music.mp3']
+		])
+		.then(() => {
+			let played = false;
+			document.addEventListener('pointerdown', () => {
+				if (!played) {
+					this.audio.play('bg_music', { volume: 0.5, loop: true });
+					played = true;
+				}
+			}, { once: true });
+			document.addEventListener('keydown', () => {
+				if (!played) {
+					this.audio.play('bg_music', { volume: 0.5, loop: true });
+					played = true;
+				}
+			}, { once: true });
+		})
+		.catch(err => console.error('Audio load error:', err));
+
 
 		this.makeLevel(this.state.player.level);
 
