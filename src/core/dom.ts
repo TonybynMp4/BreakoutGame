@@ -13,7 +13,12 @@ export class DomRenderer {
 	ballEl: HTMLElement;
 	bricksContainer: HTMLElement;
 
+	// Overlay de fin
+	modal: HTMLDialogElement;
+	private onWinRestartCb: (() => void) | null = null;
 
+
+	// initialisation de l'UI
 	constructor(root: HTMLElement, config: { width: number; height: number; }) {
 		this.root = root;
 
@@ -63,7 +68,7 @@ export class DomRenderer {
 		subtext.style.fontSize = '12px';
 		subtext.style.textAlign = 'center';
 		subtext.style.marginTop = '4px';
-		subtext.textContent = 'Barre espace pour démarrer!';
+		subtext.textContent = 'Barre espace pour démarrer, fleches gauche/droite pour déplacer la raquette!';
 		this.root.appendChild(subtext);
 
 		this.paddleEl = document.createElement('div');
@@ -77,6 +82,11 @@ export class DomRenderer {
 		this.bricksContainer = document.createElement('div');
 		this.bricksContainer.className = 'bricks';
 		this.playArea.appendChild(this.bricksContainer);
+
+		// Overlay (victoire)
+		this.modal = document.createElement('dialog');
+		this.modal.className = 'overlay';
+		this.playArea.appendChild(this.modal);
 
 		const title = document.createElement('div');
 		title.className = 'title';
@@ -114,6 +124,7 @@ export class DomRenderer {
 		this.volInput.value = clamp(v, 0, 1).toString();
 	}
 
+	// Met à jour la position
 	updatePaddle(x: number, y: number, w: number, h: number) {
 		Object.assign(this.paddleEl.style, {
 			left: `${x}px`,
@@ -123,6 +134,7 @@ export class DomRenderer {
 		});
 	}
 
+	// Met à jour la position
 	updateBall(x: number, y: number, r: number) {
 		const d = r * 2;
 		Object.assign(this.ballEl.style, {
@@ -133,6 +145,7 @@ export class DomRenderer {
 		});
 	}
 
+	// Crée les éléments DOM pour les briques
 	renderBricks(bricks: Brick[]) {
 		this.bricksContainer.innerHTML = '';
 		for (let i = 0; i < bricks.length; i++) {
@@ -180,5 +193,28 @@ export class DomRenderer {
 			el.removeEventListener('animationend', once);
 		};
 		el.addEventListener('animationend', once);
+	}
+
+	showWinOverlay(finalScore: number) {
+		this.modal.innerHTML = `
+				<h2>Bravo ! Jeu terminé 🎉</h2>
+				<p class="final-score">Score final: ${finalScore}</p>
+				<p class="hint">Cliquez sur Rejouer pour recommencer au niveau 1!</p>
+				<button class="btn btn-primary" id="win-restart-btn">Rejouer</button>
+		`;
+		const btn = document.getElementById('win-restart-btn') as HTMLButtonElement;
+		btn.addEventListener('click', () => {
+			if (this.onWinRestartCb) this.onWinRestartCb();
+		});
+		this.modal.showModal();
+	}
+
+	hideOverlay() {
+		this.modal.close();
+	}
+
+	//
+	setWinRestart(cb: () => void) {
+		this.onWinRestartCb = cb;
 	}
 }

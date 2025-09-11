@@ -6,7 +6,6 @@ Cassez toutes les briques sans perdre toutes vos vies!
 - fleches gauche/droite pour déplacer la palette
 - espace pour lancer la balle
 
-
 ### Installation
 
 ```

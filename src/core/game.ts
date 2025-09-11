@@ -29,8 +29,7 @@ export class Game {
 			['lose', '/fx/lose.wav'],
 			['cheer', '/fx/cheer.wav'],
 			['bg_music', '/fx/bg_music.mp3']
-		])
-		.then(() => {
+		]).then(() => {
 			let played = false;
 			document.addEventListener('pointerdown', () => {
 				if (!played) {
@@ -44,8 +43,7 @@ export class Game {
 					played = true;
 				}
 			}, { once: true });
-		})
-		.catch(err => console.error('Audio load error:', err));
+		}).catch(err => console.error('Audio load error:', err));
 
 
 		this.makeLevel(this.state.player.level);
@@ -67,6 +65,16 @@ export class Game {
 		this.renderer.onToggleMute((muted) => this.audio.toggleSounds(!muted));
 		this.renderer.onVolumeChange((v) => this.audio.setVolume(v));
 
+		// Fonction de callback pour le bouton rejouer de l'écran de victoire
+		this.renderer.setWinRestart(() => {
+			this.renderer.hideOverlay();
+			this.state.player = { score: 0, lives: 3, level: 1 };
+			this.makeLevel(1);
+			this.updateInfos();
+			this.ending = false;
+			this.start();
+		});
+
 		// Synchroniser l'UI avec l'état audio initial (persisté)
 		this.renderer.setMuteIcon(!this.audio.getEnabled());
 		this.renderer.setVolumeSlider(this.audio.getVolume());
@@ -75,6 +83,7 @@ export class Game {
 	start() { this.state.running = true; this.loop(); }
 	stop() { this.state.running = false; cancelAnimationFrame(this.rafId); }
 
+	// Crée les briques pour le niveau donné
 	makeLevel(level: number) {
 		const cfg = this.state.config;
 		const layout = cfg.levelLayouts[level - 1];
@@ -118,6 +127,7 @@ export class Game {
 		this.draw();
 	};
 
+	// Logique de jeu (collisions, déplacements, état)
 	update() {
 		const {
 			awaitingStart,
@@ -207,13 +217,13 @@ export class Game {
 					this.ending = true;
 					this.stop();
 				}
-				this.win()
+				this.win();
 				return;
 			}
 			// Vies selon niveau: 3 + (level-1)
 			const baseLives = 3 + (nextLevel - 1);
-			player.level = nextLevel
-			player.lives = baseLives
+			player.level = nextLevel;
+			player.lives = baseLives;
 			this.makeLevel(nextLevel);
 			this.updateInfos();
 		}
@@ -225,29 +235,28 @@ export class Game {
 		this.renderer.updateBall(ball.x, ball.y, ball.radius);
 	}
 
-	reset(alertText: string, isWin?: boolean) {
+	reset(isWin: boolean) {
 		this.stop();
 		if (isWin) {
 			this.audio.play('cheer');
 			this.audio.play('win');
+			this.renderer.showWinOverlay(this.state.player.score);
+			this.ending = true;
 		} else {
 			this.audio.play('lose');
-		}
-		setTimeout(() => {
-			alert(alertText);
 			this.state.player = { score: 0, lives: 3, level: 1 };
 			this.makeLevel(1);
 			this.updateInfos();
-			this.ending = isWin ? true : false;
+			this.ending = false;
 			this.start();
-		}, 50); // délai pour laisser jouer le son avant l'alert
+		}
 	}
 
 	gameOver() {
-		this.reset('Perdu ! Appuyez sur OK pour recommencer.');
+		this.reset(false);
 	}
 
 	win() {
-		this.reset('Bravo ! Jeu terminé.', true);
+		this.reset(true);
 	}
 }
