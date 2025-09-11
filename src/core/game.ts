@@ -31,13 +31,13 @@ export class Game {
 			let played = false;
 			document.addEventListener('pointerdown', () => {
 				if (!played) {
-					this.audio.play('bg_music', { volume: 0.5, loop: true });
+					this.audio.play('bg_music', { volume: 0.25, loop: true });
 					played = true;
 				}
 			}, { once: true });
 			document.addEventListener('keydown', () => {
 				if (!played) {
-					this.audio.play('bg_music', { volume: 0.5, loop: true });
+					this.audio.play('bg_music', { volume: 0.25, loop: true });
 					played = true;
 				}
 			}, { once: true });

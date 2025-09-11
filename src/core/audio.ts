@@ -49,7 +49,7 @@ export class AudioManager {
 		try {
 			// Clone pour pouvoir avoir une superposition des sons identiques
 			const soundNode = audioElement.cloneNode(true) as HTMLAudioElement;
-			const v = opts?.volume ?? 1 * this.volume;
+			const v = (opts?.volume ?? 1) * this.volume;
 			soundNode.volume = clamp(v, 0, 1);
 			soundNode.loop = opts?.loop ?? false;
 			soundNode.play();
