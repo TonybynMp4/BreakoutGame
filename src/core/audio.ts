@@ -60,12 +60,14 @@ export class AudioManager {
 
 	toggleSounds(volume: boolean) {
 		this.enabled = volume;
-		try { localStorage.setItem(LOCAL_STORAGE_KEYS.muted, volume ? '0' : '1'); } catch { }
+		try { localStorage.setItem(LOCAL_STORAGE_KEYS.muted, volume ? '0' : '1'); }
+		catch (e) { console.error('Error saving audio settings to localStorage:', e); }
 	}
 
 	setVolume(volume: number) {
 		this.volume = clamp(volume, 0, 1);
-		try { localStorage.setItem(LOCAL_STORAGE_KEYS.volume, String(this.volume)); } catch { }
+		try { localStorage.setItem(LOCAL_STORAGE_KEYS.volume, String(this.volume)); }
+		catch (e) { console.error('Error saving audio settings to localStorage:', e); }
 	}
 
 	getVolume() { return this.volume; }
