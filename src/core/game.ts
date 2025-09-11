@@ -40,7 +40,7 @@ export class Game {
 			}, { once: true });
 			document.addEventListener('keydown', () => {
 				if (!played) {
-					this.audio.play('bg_music', { volume: 0.1, loop: true });
+					this.audio.play('bg_music', { volume: 0.05, loop: true });
 					played = true;
 				}
 			}, { once: true });
