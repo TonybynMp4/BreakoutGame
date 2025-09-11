@@ -12,6 +12,9 @@ export class Game {
 	root: HTMLElement;
 	audio = new AudioManager();
 	private ending = false; // évite de déclencher fin de jeu + fin de partie
+	private playTap = this.audio.play.bind(this.audio, 'tap');
+	private playPop = this.audio.play.bind(this.audio, 'pop', { volume: 0.1 });
+
 
 	constructor(root: HTMLElement, config: GameConfig) {
 		this.root = root;
@@ -186,11 +189,11 @@ export class Game {
 					player.score += 10;
 					this.updateInfos();
 					this.renderer.updateBrick(i, b);
-					this.audio.play('pop', { volume: 0.1 });
+					this.playPop();
 				}
 				else {
 					this.renderer.updateBrick(i, b);
-					this.audio.play('tap');
+					this.playTap();
 				}
 				break;
 			}
