@@ -42,6 +42,7 @@ export class DomRenderer {
 		this.volInput.step = '0.05';
 		this.volInput.value = '1';
 		this.volInput.style.width = '140px';
+		this.volInput.style.accentColor = '#3f51b5';
 
 		this.status = document.createElement('div');
 		this.status.id = 'status';
