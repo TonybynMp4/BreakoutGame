@@ -1,4 +1,5 @@
-import type { Brick } from '../types/index.ts';
+import type { Brick } from '../types.ts';
+import { clamp } from '../utils/clamp.ts';
 
 export class DomRenderer {
 	root: HTMLElement;
@@ -90,7 +91,7 @@ export class DomRenderer {
 	onVolumeChange(cb: (volume: number) => void) {
 		this.volInput.addEventListener('input', () => {
 			const v = parseFloat(this.volInput.value);
-			cb(Number.isFinite(v) ? v : 1);
+			cb(clamp(v, 0, 1));
 		});
 	}
 
@@ -109,7 +110,7 @@ export class DomRenderer {
 	}
 
 	setVolumeSlider(v: number) {
-		this.volInput.value = String(Math.max(0, Math.min(1, v)));
+		this.volInput.value = clamp(v, 0, 1).toString();
 	}
 
 	updatePaddle(x: number, y: number, w: number, h: number) {

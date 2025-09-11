@@ -1,5 +1,5 @@
 import { Game } from './core/game.ts';
-import type { GameConfig } from './types/index.ts';
+import type { GameConfig } from './types.ts';
 
 const root = document.getElementById('app')!;
 const config: GameConfig = {

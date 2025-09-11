@@ -1,4 +1,4 @@
-import type { Ball, Brick, GameConfig, Paddle, PlayerState } from '../types/index.ts';
+import type { Ball, Brick, GameConfig, Paddle, PlayerState } from '../types.ts';
 
 export class GameState {
 	public readonly config: GameConfig;
@@ -11,9 +11,7 @@ export class GameState {
 
 	constructor(config: GameConfig) {
 		this.config = config;
-		const startLevel = 1;
-		const baseLives = 3 + 2 * (startLevel - 1);
-		this.player = { score: 0, lives: baseLives, level: startLevel };
+		this.player = { score: 0, lives: 3, level: 1 };
 
 		this.paddle = {
 			width: config.paddleWidth,
@@ -28,7 +26,7 @@ export class GameState {
 			y: this.paddle.y - config.ballRadius - 2,
 			radius: config.ballRadius,
 			vx: 0,
-			vy: -0,
+			vy: 0,
 			speed: config.ballSpeed
 		};
 	}

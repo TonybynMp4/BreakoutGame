@@ -1,4 +1,5 @@
-import type { Brick, Direction, GameConfig } from '../types/index.ts';
+import type { Brick, Direction, GameConfig } from '../types.ts';
+import { circleRectCollision } from '../utils/ballCollision.ts';
 import { clamp } from '../utils/clamp.ts';
 import { AudioManager } from './audio.ts';
 import { DomRenderer } from './dom.ts';
@@ -14,7 +15,6 @@ export class Game {
 	private ending = false; // évite de déclencher fin de jeu + fin de partie
 	private playTap = this.audio.play.bind(this.audio, 'tap');
 	private playPop = this.audio.play.bind(this.audio, 'pop', { volume: 0.1 });
-
 
 	constructor(root: HTMLElement, config: GameConfig) {
 		this.root = root;
@@ -40,7 +40,7 @@ export class Game {
 			}, { once: true });
 			document.addEventListener('keydown', () => {
 				if (!played) {
-					this.audio.play('bg_music', { volume: 0.25, loop: true });
+					this.audio.play('bg_music', { volume: 0.1, loop: true });
 					played = true;
 				}
 			}, { once: true });
@@ -168,7 +168,7 @@ export class Game {
 		for (let i = 0; i < bricks.length; i++) {
 			const b = bricks[i];
 			if (!b.alive) continue;
-			if (this.circleRectCollision(ball.x, ball.y, ball.radius, b.x, b.y, b.width, b.height)) {
+			if (circleRectCollision(ball.x, ball.y, ball.radius, b.x, b.y, b.width, b.height)) {
 				// Détermination de l'axe d'impact pour choisir le rebond (horizontal vs vertical)
 				const closestX = clamp(ball.x, b.x, b.x + b.width);
 				const closestY = clamp(ball.y, b.y, b.y + b.height);
@@ -219,14 +219,6 @@ export class Game {
 		}
 	}
 
-	circleRectCollision(cx: number, cy: number, cr: number, rx: number, ry: number, rw: number, rh: number) {
-		const closestX = clamp(cx, rx, rx + rw);
-		const closestY = clamp(cy, ry, ry + rh);
-		const dx = cx - closestX;
-		const dy = cy - closestY;
-		return dx * dx + dy * dy <= cr * cr;
-	}
-
 	draw() {
 		const { paddle, ball } = this.state;
 		this.renderer.updatePaddle(paddle.x, paddle.y, paddle.width, paddle.height);
@@ -250,7 +242,6 @@ export class Game {
 			this.start();
 		}, 50); // délai pour laisser jouer le son avant l'alert
 	}
-
 
 	gameOver() {
 		this.reset('Perdu ! Appuyez sur OK pour recommencer.');
